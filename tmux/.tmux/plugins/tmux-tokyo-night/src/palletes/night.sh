@@ -33,6 +33,9 @@ declare -A PALLETE=(
   [red]="#f7768e"
   [red1]="#db4b4b"
   [white]="#ffffff"
+  [icon]="#677aa3"
+  [time]="#435170"
+  [date]="#303a50"
 )
 
 export PALLETE

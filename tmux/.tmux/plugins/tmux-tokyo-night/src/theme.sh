@@ -20,8 +20,6 @@ magenta="#b22b90"
 
 border_style_active_pane=$(get_tmux_option "@theme_active_pane_border_style" "fg=$magenta")
 border_style_inactive_pane=$(get_tmux_option "@theme_inactive_pane_border_style" "fg=$magenta2")
-# border_style_active_pane=$(get_tmux_option "@theme_active_pane_border_style" "fg=${PALLETE['dark5']}")
-# border_style_inactive_pane=$(get_tmux_option "@theme_inactive_pane_border_style" "fg=${PALLETE[bg_highlight]}")
 left_separator=$(get_tmux_option "@theme_left_separator" "")
 right_separator=$(get_tmux_option "@theme_right_separator" "")
 
@@ -77,25 +75,37 @@ if [ "$theme_disable_plugins" -ne 1 ]; then
       icon_var="plugin_${plugin}_icon"
       accent_color_var="plugin_${plugin}_accent_color"
       accent_color_icon_var="plugin_${plugin}_accent_color_icon"
+      accent_color_date_var="plugin_${plugin}_accent_color_date"
 
       plugin_icon="${!icon_var}"
       accent_color="${!accent_color_var}"
       accent_color_icon="${!accent_color_icon_var}"
+      accent_color_date="${!accent_color_date_var}"
 
+      # time
       separator_start="#[fg=${PALLETE[$accent_color]},bg=${PALLETE[bg_highlight]}]${right_separator}#[none]"
-      separator_end="#[fg=${PALLETE[bg_highlight]},bg=${PALLETE[$accent_color]}]${right_separator}#[none]"
+      separator_end="#[fg=${PALLETE[$accent_color_date]},bg=${PALLETE[$accent_color]}]${right_separator}#[none]"
+
+      # date
+      separator_date_start="#[fg=${PALLETE[$accent_color_date]},bg=${PALLETE[bg_highlight]}]${right_separator}#[none]"
+      separator_date_end="#[fg=${PALLETE[bg_highlight]},bg=${PALLETE[$accent_color_date]}]${right_separator}#[none]"
+
+      # icon
       separator_icon_start="#[fg=${PALLETE[$accent_color_icon]},bg=${PALLETE[bg_highlight]}]${right_separator}#[none]"
       separator_icon_end="#[fg=${PALLETE[$accent_color]},bg=${PALLETE[$accent_color_icon]}]${right_separator}#[none]"
 
-      plugin_output="#[fg=${PALLETE[white]},bg=${PALLETE[$accent_color]}]$(load_plugin)#[none]"
+      #time
+      plugin_output="#[fg=${PALLETE[white]},bg=${PALLETE[$accent_color]}]$(load_time_plugin)#[none]${separator_end}"
       plugin_output_string=""
+      # date
+      plugin_output_date="#[fg=${PALLETE[white]},bg=${PALLETE[$accent_color_date]}]$(load_date_plugin)#[none]"
 
       plugin_icon_output="${separator_icon_start}#[fg=${PALLETE[white]},bg=${PALLETE[$accent_color_icon]}]${plugin_icon}${separator_icon_end}"
 
       if [ ! $is_last_plugin -eq 1 ] || [ "${#plugins[@]}" -gt 1 ];then
-        plugin_output_string="${plugin_icon_output}${plugin_output}${separator_end}"
+        plugin_output_string="${plugin_icon_output}${plugin_output}${plugin_output_date}${separator_end}"
       else
-        plugin_output_string="${plugin_icon_output}${plugin_output}"
+        plugin_output_string="${plugin_icon_output}${plugin_output}${plugin_output_date}"
       fi
 
       tmux set-option -ga status-right "$plugin_output_string"
