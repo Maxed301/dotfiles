@@ -1,1 +1,0 @@
--- vim.api.nvim_set_hl(0, "FloatBorder", { fg = "#b22b90", bg = "none" })

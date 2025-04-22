@@ -1,5 +1,9 @@
 vim.opt.guicursor = ""
 
+vim.g.mapleader = " "
+vim.opt.smartcase = true
+vim.opt.ignorecase = true
+
 vim.opt.nu = true
 vim.opt.relativenumber = true
 
