@@ -14,6 +14,12 @@ return {
 		"nvim-telescope/telescope-ui-select.nvim",
 		"nvim-tree/nvim-web-devicons",
 	},
+	defaults = {
+		preview = {
+			filesize_limit = 0.5555,
+		},
+	},
+
 	config = function()
 		local telescope = require("telescope")
 		telescope.setup({
@@ -60,6 +66,9 @@ return {
 		map("n", "<leader>sn", function()
 			builtin.find_files({ cwd = vim.fn.stdpath("config") })
 		end, { desc = "[S]earch [N]eovim files" })
+		map("n", "<leader>le", function()
+			require("telescope.builtin").diagnostics({ severity = vim.diagnostic.severity.ERROR })
+		end, { desc = "Show [L]SP [E]rrors", silent = true })
 
 		local colors = require("config.palette")
 		local Highlights = {

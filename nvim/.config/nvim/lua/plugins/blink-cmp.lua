@@ -39,7 +39,6 @@ return {
 				ghost_text = { enabled = false },
 			},
 
-			-- sources: LSP, filesystem paths, snippets, buffer
 			sources = {
 				default = { "lsp", "path", "snippets", "buffer" },
 			},
