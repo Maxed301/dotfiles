@@ -8,12 +8,20 @@ return {
 		{ "folke/neodev.nvim", opts = {} },
 	},
 	config = function()
+		local on_attach = function(client, bufnr)
+			local bufopts = { buffer = bufnr, remap = false }
+			vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
+			vim.keymap.set("n", "gD", vim.lsp.buf.declaration, bufopts)
+			vim.keymap.set("n", "gi", vim.lsp.buf.implementation, bufopts)
+			vim.keymap.set("n", "gr", vim.lsp.buf.references, bufopts)
+		end
+
 		do
-			local orig_util_open = vim.lsp.util.open_floating_preview
+			local orig = vim.lsp.util.open_floating_preview
 			vim.lsp.util.open_floating_preview = function(contents, syntax, opts, ...)
 				opts = opts or {}
 				opts.border = opts.border or "rounded"
-				return orig_util_open(contents, syntax, opts, ...)
+				return orig(contents, syntax, opts, ...)
 			end
 		end
 
@@ -33,18 +41,15 @@ return {
 			},
 		}
 
-		require("mason").setup({
-			ui = {
-				border = "rounded",
-			},
-		})
-
+		require("mason").setup({ ui = { border = "rounded" } })
 		require("mason-tool-installer").setup({ ensure_installed = vim.tbl_keys(servers) })
+
 		require("mason-lspconfig").setup({
 			handlers = {
-				function(server_name)
+				function(server_name) -- default handler
 					local opts = servers[server_name] or {}
 					opts.capabilities = capabilities
+					opts.on_attach = on_attach -- ← add this
 					require("lspconfig")[server_name].setup(opts)
 				end,
 			},
