@@ -1,4 +1,3 @@
-# ported from ~/nixconf/home.nix programs.starship
 format = "$directory$character"
 right_format = "$cmd_duration$username$hostname$time"
 

@@ -1,4 +1,4 @@
-# fish config (ported from ~/nixconf/home.nix programs.fish)
+# fish config
 
 set -g fish_greeting
 set -g fish_history_max_size 10000

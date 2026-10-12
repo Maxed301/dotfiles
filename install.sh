@@ -6,7 +6,7 @@
 #   ./install.sh -n           dry run: show what would happen
 #
 # A file in $HOME that would block a link (a real file, or a symlink that
-# points somewhere else, e.g. a dead /nix/store link) is moved to
+# points somewhere else) is moved to
 # ~/.dotfiles-backup/<timestamp>/ first. Re-running is safe.
 set -euo pipefail
 
