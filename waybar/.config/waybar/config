@@ -10,10 +10,12 @@
     "hyprland/window"
   ],
   "modules-right": [
+    "mpris",
     "pulseaudio",
     "network",
     "cpu",
     "memory",
+    "idle_inhibitor",
     "tray",
     "clock"
   ],
@@ -99,6 +101,28 @@
     "format-disconnected": "󰖪  offline",
     "tooltip-format": "{ifname}  {essid}  {ipaddr} via {gwaddr}",
     "on-click": "nm-connection-editor"
+  },
+  "mpris": {
+    "format": "{status_icon}  {dynamic}",
+    "dynamic-order": ["artist", "title"],
+    "dynamic-len": 40,
+    "status-icons": {
+      "playing": "󰐊",
+      "paused": "󰏤",
+      "stopped": "󰓛"
+    },
+    "on-click": "playerctl play-pause",
+    "on-scroll-up": "playerctl next",
+    "on-scroll-down": "playerctl previous"
+  },
+  "idle_inhibitor": {
+    "format": "{icon}",
+    "format-icons": {
+      "activated": "󰅶",
+      "deactivated": "󰾪"
+    },
+    "tooltip-format-activated": "Idle inhibited: no auto-lock / screen off",
+    "tooltip-format-deactivated": "Auto-lock enabled"
   },
   "tray": {
     "icon-size": 16,

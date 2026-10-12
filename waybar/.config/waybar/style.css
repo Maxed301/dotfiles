@@ -61,10 +61,12 @@ window#waybar.empty #window {
 }
 
 /* --- right side: plain text, thin separators ------------------------------ */
+#mpris,
 #pulseaudio,
 #network,
 #cpu,
 #memory,
+#idle_inhibitor,
 #tray,
 #clock {
   padding: 0 12px;
@@ -73,8 +75,17 @@ window#waybar.empty #window {
   border-left: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-#pulseaudio {
+#mpris {
   border-left: none;
+  color: #bdbdbd;
+}
+
+#mpris.paused {
+  color: #8b8b8b;
+}
+
+#idle_inhibitor.activated {
+  color: #e8c475;
 }
 
 #pulseaudio.muted,
