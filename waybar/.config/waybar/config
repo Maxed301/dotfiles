@@ -1,0 +1,107 @@
+{
+  "layer": "top",
+  "position": "top",
+  "height": 34,
+  "spacing": 0,
+  "modules-left": [
+    "hyprland/workspaces"
+  ],
+  "modules-center": [
+    "hyprland/window"
+  ],
+  "modules-right": [
+    "pulseaudio",
+    "network",
+    "cpu",
+    "memory",
+    "tray",
+    "clock"
+  ],
+  "hyprland/workspaces": {
+    "format": "{icon}{windows}",
+    "format-window-separator": " ",
+    "window-rewrite-default": " ",
+    "window-rewrite": {
+      "class<com.mitchellh.ghostty>": " ",
+      "class<firefox.*>": " 󰈹",
+      "class<obsidian.*>": " 󰠮",
+      "class<[Tt]hunar>": " ",
+      "class<code.*>": " 󰨞",
+      "class<chromium.*|google-chrome.*>": " ",
+      "class<steam.*>": " ",
+      "class<vlc>": " 󰕼",
+      "class<com.obsproject.Studio>": " 󰑋",
+      "class<.*\\.exe>": " 󰊗",
+      "class<matplotlib|Figure.*|python.*|Tk>": " 󰄨"
+    },
+    "format-icons": {
+      "1": "I",
+      "2": "II",
+      "3": "III",
+      "4": "IV",
+      "5": "V",
+      "6": "VI",
+      "7": "VII",
+      "8": "VIII",
+      "9": "IX",
+      "default": "●"
+    },
+    "persistent-workspaces": {
+      "*": 5
+    },
+    "on-scroll-up": "hyprctl dispatch workspace e-1",
+    "on-scroll-down": "hyprctl dispatch workspace e+1"
+  },
+  "hyprland/window": {
+    "format": "{title}",
+    "max-length": 70,
+    "separate-outputs": true,
+    "icon": true,
+    "icon-size": 16,
+    "rewrite": {
+      "": ""
+    }
+  },
+  "clock": {
+    "format": "󰅐  {:%a %b %d  %H:%M}",
+    "format-alt": "{:%Y-%m-%d}",
+    "tooltip-format": "<tt><small>{calendar}</small></tt>"
+  },
+  "cpu": {
+    "format": "  {usage}%",
+    "interval": 3,
+    "tooltip": false
+  },
+  "memory": {
+    "format": "󰍛  {used:0.1f}G",
+    "tooltip-format": "Memory: {used:0.1f}G / {total:0.1f}G ({percentage}%)"
+  },
+  "pulseaudio": {
+    "format": "{icon}  {volume}%",
+    "format-muted": "󰝟  muted",
+    "format-bluetooth": "󰂯  {volume}%",
+    "format-icons": {
+      "headphone": "󰋋",
+      "headset": "󰋎",
+      "default": [
+        "󰕿",
+        "󰖀",
+        "󰕾"
+      ]
+    },
+    "on-click": "pwvucontrol",
+    "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+  },
+  "network": {
+    "format-wifi": "󰖩  {signalStrength}%",
+    "format-ethernet": "󰈀  {ipaddr}",
+    "format-linked": "󰈀  no IP",
+    "format-disconnected": "󰖪  offline",
+    "tooltip-format": "{ifname}  {essid}  {ipaddr} via {gwaddr}",
+    "on-click": "nm-connection-editor"
+  },
+  "tray": {
+    "icon-size": 16,
+    "spacing": 8
+  }
+}

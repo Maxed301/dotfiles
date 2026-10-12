@@ -1,0 +1,88 @@
+* {
+  border: none;
+  border-radius: 0;
+  font-family: "JetBrainsMono Nerd Font", monospace;
+  font-size: 13px;
+  min-height: 0;
+}
+
+window#waybar {
+  background: rgba(20, 20, 20, 0.92);
+  color: #e6e6e6;
+  border-bottom: 1px solid rgba(139, 0, 0, 0.6);
+}
+
+tooltip {
+  background: rgba(20, 20, 20, 0.95);
+  border: 1px solid #8b0000;
+  border-radius: 6px;
+}
+
+/* --- workspaces: numeral + app icons, the only red highlight -------------- */
+#workspaces {
+  margin-left: 6px;
+}
+
+#workspaces button {
+  padding: 0 10px;
+  margin: 4px 2px;
+  border-radius: 6px;
+  background: transparent;
+  color: #e6e6e6;
+  box-shadow: none;
+  text-shadow: none;
+}
+
+#workspaces button.empty {
+  color: #6a6a6a;
+}
+
+#workspaces button.active {
+  background: rgba(139, 0, 0, 0.75);
+  color: #ffffff;
+}
+
+#workspaces button.urgent {
+  background: rgba(200, 120, 0, 0.6);
+}
+
+#workspaces button:hover {
+  background: rgba(139, 0, 0, 0.3);
+  box-shadow: none;
+}
+
+/* --- focused window title ------------------------------------------------- */
+#window {
+  color: #bdbdbd;
+}
+
+window#waybar.empty #window {
+  background: transparent;
+}
+
+/* --- right side: plain text, thin separators ------------------------------ */
+#pulseaudio,
+#network,
+#cpu,
+#memory,
+#tray,
+#clock {
+  padding: 0 12px;
+  margin: 6px 0;
+  color: #d0d0d0;
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+#pulseaudio {
+  border-left: none;
+}
+
+#pulseaudio.muted,
+#network.disconnected {
+  color: #8b8b8b;
+}
+
+#clock {
+  color: #ffffff;
+  margin-right: 6px;
+}

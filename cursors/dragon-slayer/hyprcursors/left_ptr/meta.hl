@@ -1,0 +1,23 @@
+resize_algorithm = bilinear
+hotspot_x = 0.1
+hotspot_y = 0.1
+
+# Use the sword for the normal pointer, the text I-beam (terminals, editors)
+# and the link hand, so it doesn't fall back to the default theme there.
+define_override = arrow
+define_override = default
+define_override = top_left_arrow
+define_override = text
+define_override = xterm
+define_override = ibeam
+define_override = pointer
+define_override = hand1
+define_override = hand2
+define_override = pointing_hand
+define_override = context-menu
+define_override = copy
+define_override = alias
+
+define_size = 24, image24.png
+define_size = 32, image32.png
+define_size = 48, image48.png
