@@ -13,10 +13,6 @@ local border_groups = {
 	"FloatBorder",
 	"WinSeparator",
 	"VertSplit",
-	-- telescope borders
-	"TelescopePromptBorder",
-	"TelescopeResultsBorder",
-	"TelescopePreviewBorder",
 	-- Blink-specific popup borders
 	"BlinkCmpMenuBorder",
 	"BlinkCmpDocBorder",

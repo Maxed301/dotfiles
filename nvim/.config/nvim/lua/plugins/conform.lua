@@ -15,9 +15,11 @@ return {
 		format_on_save = true,
 		formatters_by_ft = {
 			lua = { "stylua" },
-			cpp = { "clang" },
+			c = { "clang-format" },
+			cpp = { "clang-format" },
+			cuda = { "clang-format" },
 			python = { "yapf" },
-			javascript = { { "prettierd", "prettier" } },
+			javascript = { "prettierd", "prettier", stop_after_first = true },
 		},
 	},
 	config = function(_, opts)

@@ -2,7 +2,6 @@ return {
 	"TimUntersberger/neogit",
 	dependencies = {
 		"nvim-lua/plenary.nvim",
-		"nvim-telescope/telescope.nvim",
 	},
 	cmd = "Neogit",
 	init = function()
@@ -12,7 +11,7 @@ return {
 		require("neogit").setup({
 			integrations = {
 				diffview = true,
-				telescope = true,
+				telescope = false,
 			},
 
 			kind = "split",

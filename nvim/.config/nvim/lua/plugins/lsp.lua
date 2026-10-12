@@ -5,7 +5,6 @@ return {
 		"williamboman/mason-lspconfig.nvim",
 		"WhoIsSethDaniel/mason-tool-installer.nvim",
 		{ "j-hui/fidget.nvim" },
-		{ "folke/neodev.nvim", opts = {} },
 	},
 	config = function()
 		local on_attach = function(client, bufnr)
@@ -25,10 +24,18 @@ return {
 			end
 		end
 
-		local capabilities = vim.lsp.protocol.make_client_capabilities()
+		local capabilities = require("blink.cmp").get_lsp_capabilities()
+		local lspconfig = require("lspconfig")
 
 		local servers = {
-			clangd = { cmd = { "clangd", "--offset-encoding=utf-16" } },
+			clangd = {
+				cmd = {
+					"clangd",
+					"--offset-encoding=utf-16",
+					"--query-driver=/usr/bin/nvcc,/usr/local/cuda/bin/nvcc,/usr/bin/c++,/usr/bin/g++,/usr/bin/g++-12",
+				},
+			},
+			glsl_analyzer = {},
 			pyright = {},
 			rust_analyzer = {},
 			lua_ls = {
@@ -41,8 +48,15 @@ return {
 			},
 		}
 
+		local formatters = {
+			"prettier",
+			"prettierd",
+			"stylua",
+			"yapf",
+		}
+
 		require("mason").setup({ ui = { border = "rounded" } })
-		require("mason-tool-installer").setup({ ensure_installed = vim.tbl_keys(servers) })
+		require("mason-tool-installer").setup({ ensure_installed = vim.list_extend(vim.tbl_keys(servers), formatters) })
 
 		require("mason-lspconfig").setup({
 			handlers = {
@@ -50,11 +64,15 @@ return {
 					local opts = servers[server_name] or {}
 					opts.capabilities = capabilities
 					opts.on_attach = on_attach -- ← add this
-					require("lspconfig")[server_name].setup(opts)
+					lspconfig[server_name].setup(opts)
 				end,
 			},
 		})
 
-		require("fidget").setup()
+		require("fidget").setup({
+			progress = {
+				ignore = { "mojo" },
+			},
+		})
 	end,
 }
