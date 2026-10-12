@@ -1,6 +1,5 @@
 vim.opt.guicursor = ""
 
-vim.g.mapleader = " "
 vim.opt.smartcase = true
 vim.opt.ignorecase = true
 

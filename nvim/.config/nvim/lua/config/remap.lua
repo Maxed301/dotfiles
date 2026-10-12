@@ -108,10 +108,10 @@ local function diagnostics_to_quickfix(severity)
 	local loaded_items = loaded_diagnostics_to_items(severity)
 	local clients = vim.lsp.get_clients({ bufnr = 0 })
 	local workspace_clients = {}
-	local method = vim.lsp.protocol.Methods.workspace_diagnostic or "workspace/diagnostic"
+	local method = "workspace/diagnostic"
 
 	for _, client in ipairs(clients) do
-		if client.supports_method and client:supports_method(method) then
+		if client:supports_method(method) then
 			table.insert(workspace_clients, client)
 		end
 	end
@@ -166,22 +166,7 @@ vim.keymap.set("n", "<leader>rr", function()
 	vim.cmd("so")
 end, { desc = "[R]eload config" })
 
-local function restart_lsp()
-	local get_clients = vim.lsp.get_clients or vim.lsp.get_active_clients
-	for _, client in ipairs(get_clients()) do
-		if client.stop then
-			client:stop()
-		else
-			vim.lsp.stop_client(client.id)
-		end
-	end
-	vim.defer_fn(function()
-		vim.cmd("edit")
-	end, 100)
-end
-
-vim.api.nvim_create_user_command("LspRestart", restart_lsp, { desc = "Restart LSP clients" })
-vim.keymap.set("n", "<leader>lr", restart_lsp, { desc = "[L]SP [R]estart", silent = true })
+vim.keymap.set("n", "<leader>lr", "<cmd>lsp restart<CR>", { desc = "[L]SP [R]estart", silent = true })
 
 local diagnostics_active = true
 local virtual_text_active = true
