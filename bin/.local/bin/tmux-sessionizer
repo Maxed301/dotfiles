@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+# Pick a project directory and switch to (or create) a tmux session for it.
+#   tmux-sessionizer            pick from the search dirs
+#   tmux-sessionizer <dir>      jump straight to <dir>
+# Search dirs: $TMUX_SESSIONIZER_DIRS (space separated), default below.
+# Bound to prefix+f in tmux and <C-f> in nvim.
+set -euo pipefail
+
+dirs=(${TMUX_SESSIONIZER_DIRS:-$HOME/Projects $HOME/dotfiles $HOME})
+
+pick() {
+  if command -v fzf >/dev/null; then
+    fzf --prompt='session> ' --reverse
+  else
+    fuzzel --dmenu --prompt='  '
+  fi
+}
+
+if [ $# -eq 1 ]; then
+  selected="$1"
+else
+  selected="$(find "${dirs[@]}" -mindepth 1 -maxdepth 1 -type d ! -name '.*' 2>/dev/null | sort -u | pick)" || exit 0
+fi
+[ -n "$selected" ] || exit 0
+
+name="$(basename "$selected" | tr '.:' '__')"
+
+if ! tmux has-session -t "=$name" 2>/dev/null; then
+  tmux new-session -ds "$name" -c "$selected"
+fi
+
+if [ -n "${TMUX:-}" ]; then
+  tmux switch-client -t "=$name"
+else
+  tmux attach-session -t "=$name"
+fi
