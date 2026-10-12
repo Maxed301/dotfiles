@@ -1,7 +1,7 @@
 local max_filesize = 100 * 1024 -- 100 KB
 
 local function is_large_file(buf)
-	local ok, stats = pcall((vim.uv or vim.loop).fs_stat, vim.api.nvim_buf_get_name(buf))
+	local ok, stats = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(buf))
 	return ok and stats and stats.size > max_filesize
 end
 
@@ -9,14 +9,18 @@ local languages = {
 	"bash",
 	"c",
 	"cpp",
+	"css",
 	"cuda",
+	"fish",
 	"html",
+	"json",
 	"lua",
 	"luadoc",
 	"markdown",
 	"markdown_inline",
 	"python",
 	"rust",
+	"toml",
 	"vim",
 	"vimdoc",
 }
@@ -32,6 +36,8 @@ return {
 		local treesitter = require("nvim-treesitter")
 
 		treesitter.setup()
+		-- installs only what's missing (async), so adding a language above is enough
+		treesitter.install(languages)
 
 		vim.api.nvim_create_autocmd("FileType", {
 			callback = function(ctx)

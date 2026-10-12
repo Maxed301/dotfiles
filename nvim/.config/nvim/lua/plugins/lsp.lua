@@ -31,6 +31,7 @@ return {
 			glsl_analyzer = {},
 			pyright = {},
 			rust_analyzer = {},
+			taplo = {},
 			lua_ls = {
 				settings = {
 					Lua = {
