@@ -26,5 +26,7 @@ if status is-interactive
     set -g fish_color_redirection cyan
 
     command -q zoxide; and zoxide init fish | source
+    # Ctrl+R history, Ctrl+T insert path, Alt+C cd (from Ubuntu's fzf package)
+    functions -q fzf_key_bindings; and fzf_key_bindings
     command -q starship; and starship init fish | source
 end
