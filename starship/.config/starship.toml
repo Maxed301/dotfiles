@@ -1,24 +1,6 @@
-# default left prompt (dir, git, languages, duration); user@host + time on the right
-right_format = "$username$hostname$time"
+# one line: folder, git, how long the last command took, prompt
+format = "$directory$git_branch$git_state$git_status$cmd_duration$character"
 
 [character]
 success_symbol = "[λ](bold green)"
 error_symbol = "[λ](bold red)"
-
-[username]
-style_user = "bold blue"
-style_root = "bold red"
-format = "[$user]($style)"
-disabled = false
-
-[hostname]
-ssh_only = false
-format = "[@$hostname]($style) "
-style = "bold cyan"
-disabled = false
-
-[time]
-disabled = false
-style = "cyan"
-format = "[ $time]($style) "
-time_format = "%T"
