@@ -63,6 +63,8 @@ See the header of the script for the apt build dependencies. Log out and back in
 | Super+Shift+V           | clipboard history                    |
 | Super+Shift+M           | exit Hyprland                        |
 | prefix f (tmux), C-f (nvim) | tmux-sessionizer                 |
+| Alt+1..5 (tmux)         | jump to window                       |
+| Ctrl+R / Ctrl+T / Alt+C (fish) | fzf history / insert path / cd |
 
 The screen locks after 10 min idle and the monitor turns off after 15 min. The
 waybar idle-inhibitor button pauses both.
