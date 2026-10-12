@@ -3,6 +3,7 @@
 # latest *release* tags:
 #
 #   hypr libs (/usr/local) -> Hyprland (/usr/local) -> hyprbars plugin
+#   hyprlock + hypridle (/usr/local, needs sdbus-c++ + hyprland-protocols)
 #   waybar (~/.local)  ghostty (~/.local)  hyprshot (~/.local/src)
 #
 # Usage:
@@ -13,7 +14,7 @@
 # After a Hyprland update: log out and back in (Super+Shift+M).
 #
 # apt prerequisites: clang-19 g++-14 cmake meson ninja-build patchelf libeis-dev
-#   libc++-19-dev libc++abi-19-dev
+#   libc++-19-dev libc++abi-19-dev libpam0g-dev libsystemd-dev
 #   (and NOT libinput-dev / libdisplay-info-dev / libmuparser-dev / libre2-dev:
 #    their /usr/lib .so links
 #    shadow the newer /usr/local libs during CMake's library lookup)
@@ -91,6 +92,8 @@ v_scanner()  { hyprwayland-scanner --version 2>/dev/null || echo 0; }
 v_hyprland() { Hyprland --version 2>/dev/null | sed -nE 's/^Tag: (v[0-9.]+).*/\1/p' | head -1 || echo 0; }
 v_waybar()   { waybar --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1 || echo 0; }
 v_ghostty()  { ghostty --version 2>/dev/null | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' || echo 0; }
+v_hyprlock() { hyprlock --version 2>/dev/null | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' | head -1 || echo 0; }
+v_hypridle() { hypridle --version 2>/dev/null | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' | head -1 || echo 0; }
 v_hyprshot() { git -C "$HOME/.local/src/hyprshot" describe --tags --abbrev=0 2>/dev/null || echo 0; }
 
 # name | repo | installed-version command   (order = build order)
@@ -105,6 +108,10 @@ COMPONENTS=(
   "aquamarine|https://github.com/hyprwm/aquamarine|v_pc aquamarine"
   "hyprwire|https://github.com/hyprwm/hyprwire|v_pc hyprwire"
   "Hyprland|https://github.com/hyprwm/Hyprland|v_hyprland"
+  "sdbus-cpp|https://github.com/Kistler-Group/sdbus-cpp|v_pc sdbus-c++"
+  "hyprland-protocols|https://github.com/hyprwm/hyprland-protocols|v_pc hyprland-protocols"
+  "hyprlock|https://github.com/hyprwm/hyprlock|v_hyprlock"
+  "hypridle|https://github.com/hyprwm/hypridle|v_hypridle"
   "waybar|https://github.com/Alexays/Waybar|v_waybar"
   "ghostty|https://github.com/ghostty-org/ghostty|v_ghostty"
   "hyprshot|https://github.com/Gustash/hyprshot|v_hyprshot"
@@ -141,6 +148,25 @@ build_hyprbars() { # [hyprland src dir]
   # rename into place: the running Hyprland has the old plugin mapped
   cp "$dir/hyprbars/hyprbars.so" "$HOME/.local/lib/hyprland-plugins/hyprbars.so.new"
   mv -f "$HOME/.local/lib/hyprland-plugins/hyprbars.so.new" "$HOME/.local/lib/hyprland-plugins/hyprbars.so"
+}
+
+# hyprlock: built with libc++, so it can't use Ubuntu's libdate-tz (libstdc++
+# ABI). Build HowardHinnant/date as a private static libc++ lib just for it.
+# CMAKE_INSTALL_SYSCONFDIR=/etc puts the PAM file at /etc/pam.d/hyprlock,
+# where PAM looks (not /usr/local/etc).
+build_hyprlock() {
+  local date_dir="$WORK/date" date_prefix="$WORK/date-libcxx"
+  fresh_clone https://github.com/HowardHinnant/date "$(latest_tag https://github.com/HowardHinnant/date)" "$date_dir"
+  CC="$HYPR_CC" CXX="$HYPR_CXX" cmake -S "$date_dir" -B "$date_dir/build" -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX="$date_prefix" -DBUILD_TZ_LIB=ON -DUSE_SYSTEM_TZ_DB=ON -DBUILD_SHARED_LIBS=OFF \
+    -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DCMAKE_CXX_FLAGS=-stdlib=libc++ -Wno-dev >/dev/null
+  cmake --build "$date_dir/build" -j "$JOBS"
+  rm -rf "$date_prefix"; cmake --install "$date_dir/build" >/dev/null
+
+  fresh_clone "$2" "$3" "$WORK/hyprlock"
+  cmake_install "$WORK/hyprlock" -DCMAKE_INSTALL_SYSCONFDIR=/etc \
+    "-DCMAKE_CXX_FLAGS=-stdlib=libc++ -isystem $date_prefix/include" \
+    "-DCMAKE_CXX_STANDARD_LIBRARIES=$date_prefix/lib/libdate-tz.a"
 }
 
 # meson projects that Ubuntu 24.04 ships too old (wayland-protocols,
@@ -194,7 +220,7 @@ mkdir -p "$WORK"
 # Everything above hyprutils links against it (and each other): once one of
 # these is rebuilt, the rest must be rebuilt too, or Hyprland ends up loading
 # two hyprutils/aquamarine versions at once.
-CHAIN=" hyprutils hyprlang hyprcursor hyprgraphics aquamarine hyprwire Hyprland "
+CHAIN=" hyprutils hyprlang hyprcursor hyprgraphics aquamarine hyprwire Hyprland hyprlock hypridle "
 cascade=0
 todo=()
 printf '%-22s %-12s %-12s\n' component installed latest
@@ -225,7 +251,7 @@ for entry in "${todo[@]}"; do
   case "$name" in
     hyprbars) build_hyprbars ;;
     wayland-protocols|libdisplay-info) build_meson_usrlocal "$name" "$repo" "$tag" ;;
-    Hyprland|waybar|ghostty|hyprshot) "build_$name" "$name" "$repo" "$tag" ;;
+    Hyprland|hyprlock|waybar|ghostty|hyprshot) "build_$name" "$name" "$repo" "$tag" ;;
     *) build_generic_cmake "$name" "$repo" "$tag" ;;
   esac
 done
