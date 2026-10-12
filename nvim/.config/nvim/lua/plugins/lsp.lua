@@ -1,31 +1,24 @@
 return {
 	"neovim/nvim-lspconfig",
 	dependencies = {
-		{ "williamboman/mason.nvim", config = true },
-		"williamboman/mason-lspconfig.nvim",
+		{ "mason-org/mason.nvim", opts = { ui = { border = "rounded" } } },
+		"mason-org/mason-lspconfig.nvim",
 		"WhoIsSethDaniel/mason-tool-installer.nvim",
-		{ "j-hui/fidget.nvim" },
+		"j-hui/fidget.nvim",
+		"saghen/blink.cmp",
 	},
 	config = function()
-		local on_attach = function(client, bufnr)
-			local bufopts = { buffer = bufnr, remap = false }
-			vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
-			vim.keymap.set("n", "gD", vim.lsp.buf.declaration, bufopts)
-			vim.keymap.set("n", "gi", vim.lsp.buf.implementation, bufopts)
-			vim.keymap.set("n", "gr", vim.lsp.buf.references, bufopts)
-		end
-
-		do
-			local orig = vim.lsp.util.open_floating_preview
-			vim.lsp.util.open_floating_preview = function(contents, syntax, opts, ...)
-				opts = opts or {}
-				opts.border = opts.border or "rounded"
-				return orig(contents, syntax, opts, ...)
-			end
-		end
-
-		local capabilities = require("blink.cmp").get_lsp_capabilities()
-		local lspconfig = require("lspconfig")
+		-- Neovim >= 0.11 already maps grn (rename), gra (code action), grr
+		-- (references), gri (implementation), gO (symbols) and K (hover).
+		vim.api.nvim_create_autocmd("LspAttach", {
+			group = vim.api.nvim_create_augroup("user-lsp-attach", { clear = true }),
+			callback = function(ev)
+				local bufopts = { buffer = ev.buf }
+				vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
+				vim.keymap.set("n", "gD", vim.lsp.buf.declaration, bufopts)
+				vim.keymap.set("n", "gi", vim.lsp.buf.implementation, bufopts)
+			end,
+		})
 
 		local servers = {
 			clangd = {
@@ -55,19 +48,14 @@ return {
 			"yapf",
 		}
 
-		require("mason").setup({ ui = { border = "rounded" } })
-		require("mason-tool-installer").setup({ ensure_installed = vim.list_extend(vim.tbl_keys(servers), formatters) })
+		vim.lsp.config("*", { capabilities = require("blink.cmp").get_lsp_capabilities() })
+		for name, opts in pairs(servers) do
+			vim.lsp.config(name, opts)
+		end
 
-		require("mason-lspconfig").setup({
-			handlers = {
-				function(server_name) -- default handler
-					local opts = servers[server_name] or {}
-					opts.capabilities = capabilities
-					opts.on_attach = on_attach -- ← add this
-					lspconfig[server_name].setup(opts)
-				end,
-			},
-		})
+		require("mason-tool-installer").setup({ ensure_installed = vim.list_extend(vim.tbl_keys(servers), formatters) })
+		-- mason-lspconfig calls vim.lsp.enable() for every installed server
+		require("mason-lspconfig").setup({ automatic_enable = { exclude = { "stylua" } } })
 
 		require("fidget").setup({
 			progress = {

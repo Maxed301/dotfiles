@@ -1,5 +1,5 @@
 return {
-	"TimUntersberger/neogit",
+	"NeogitOrg/neogit",
 	dependencies = {
 		"nvim-lua/plenary.nvim",
 	},
@@ -9,11 +9,6 @@ return {
 	end,
 	config = function()
 		require("neogit").setup({
-			integrations = {
-				diffview = true,
-				telescope = false,
-			},
-
 			kind = "split",
 			disable_signs = false,
 			disable_hint = false,

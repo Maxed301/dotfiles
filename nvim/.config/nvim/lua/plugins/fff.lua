@@ -230,8 +230,6 @@ return {
 			fff.live_grep({ query = vim.fn.expand("<cword>") })
 		end, { desc = "[S]earch current [W]ord" })
 		map("n", "<leader>sg", fff.live_grep, { desc = "[S]earch by [G]rep" })
-		map("n", "<leader>sd", "<cmd>Diagnostics<CR>", { desc = "[S]earch [D]iagnostics", silent = true })
-		map("n", "<leader>le", "<cmd>LspErrors<CR>", { desc = "Show [L]SP [E]rrors", silent = true })
 		map("n", "<leader>qf", "<cmd>copen<CR>", { desc = "[Q]uickfix [F]ill", silent = true })
 		map("n", "<leader>sr", show_recent_files, { desc = "[S]earch [R]ecent files" })
 		map("n", "<leader>s.", show_recent_files, { desc = '[S]earch Recent Files ("." repeat)' })

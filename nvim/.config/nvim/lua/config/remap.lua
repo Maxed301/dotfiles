@@ -195,6 +195,7 @@ local function apply_diagnostics_state()
 		severity_sort = true,
 	})
 end
+apply_diagnostics_state()
 
 vim.keymap.set("n", "<leader>ii", function()
 	virtual_text_active = not virtual_text_active
