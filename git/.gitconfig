@@ -1,0 +1,18 @@
+[user]
+	name = Maxed301
+	email = 66567365+Maxed301@users.noreply.github.com
+[init]
+	defaultBranch = main
+[core]
+	editor = nvim
+[push]
+	autoSetupRemote = true
+[diff]
+	algorithm = histogram
+	colorMoved = default
+[merge]
+	conflictstyle = zdiff3
+[rerere]
+	enabled = true
+[fetch]
+	prune = true

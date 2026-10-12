@@ -1,1 +1,3 @@
-nvim/.config/nvim/plugin/packer_compiled.lua
+# machine-local state written into stowed dirs
+fish/.config/fish/fish_variables
+nvim/.config/nvim/plugin/

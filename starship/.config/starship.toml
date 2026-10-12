@@ -1,0 +1,36 @@
+# ported from ~/nixconf/home.nix programs.starship
+format = "$directory$character"
+right_format = "$cmd_duration$username$hostname$time"
+
+[character]
+success_symbol = "[λ](bold green)"
+error_symbol = "[λ](bold red)"
+
+[directory]
+format = "[  $path]($style)[$read_only]($read_only_style) "
+style = "bold purple"
+truncation_length = 3
+truncate_to_repo = false
+
+[cmd_duration]
+format = "[$duration]($style) "
+style = "yellow"
+min_time = 2000
+
+[username]
+style_user = "bold blue"
+style_root = "bold red"
+format = "[$user]($style)"
+disabled = false
+
+[hostname]
+ssh_only = false
+format = "[@$hostname]($style) "
+style = "bold cyan"
+disabled = false
+
+[time]
+disabled = false
+style = "cyan"
+format = "[ $time]($style) "
+time_format = "%T"
