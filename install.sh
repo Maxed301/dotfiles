@@ -1,9 +1,15 @@
 #!/usr/bin/env bash
 # Symlink the dotfiles into $HOME with GNU stow.
 #
-#   ./install.sh              stow every package
+#   ./install.sh              stow the default packages for this OS
 #   ./install.sh nvim tmux    stow only these
 #   ./install.sh -n           dry run: show what would happen
+#
+# Defaults depend on the OS (uname -s):
+#   Linux:  the Hyprland desktop plus the terminal/shell tools
+#   Darwin: terminal/shell tools, ghostty-macos, karabiner (no Hyprland)
+# fish is not in the macOS default: the live fish config there is not the
+# repo's copy, so stow it by name once you have merged the two.
 #
 # A file in $HOME that would block a link (a real file, or a symlink that
 # points somewhere else) is moved to
@@ -11,15 +17,32 @@
 set -euo pipefail
 
 DOTFILES="$(cd "$(dirname "$0")" && pwd)"
-ALL=(bin fish fuzzel ghostty git hypr mako nvim starship tmux waybar)
 BACKUP="$HOME/.dotfiles-backup/$(date +%Y%m%d-%H%M%S)"
+
+case "$(uname -s)" in
+  Darwin) OS=mac ;;
+  *)      OS=linux ;;
+esac
+
+if [ "$OS" = mac ]; then
+  ALL=(bin ghostty ghostty-macos git karabiner nvim starship tmux)
+else
+  ALL=(bin fish fuzzel ghostty ghostty-linux git hypr mako nvim starship tmux waybar)
+fi
 
 dry=0
 [ "${1:-}" = "-n" ] && { dry=1; shift; }
 pkgs=("$@")
 [ ${#pkgs[@]} -eq 0 ] && pkgs=("${ALL[@]}")
 
-command -v stow >/dev/null || { echo "stow is not installed (sudo apt install stow)" >&2; exit 1; }
+if ! command -v stow >/dev/null; then
+  if [ "$OS" = mac ]; then
+    echo "stow is not installed (brew install stow)" >&2
+  else
+    echo "stow is not installed (sudo apt install stow)" >&2
+  fi
+  exit 1
+fi
 
 # true if $1 already resolves into this repo (a link stow made, or an older
 # hand-made link to the same place)
@@ -60,7 +83,7 @@ for pkg in "${pkgs[@]}"; do
   fi
 done
 
-# the hyprcursor theme is compiled, not linked
+# the hyprcursor theme is compiled, not linked (Linux only)
 if [[ " ${pkgs[*]} " == *" hypr "* ]] && [ $dry -eq 0 ] && command -v hyprcursor-util >/dev/null; then
   "$DOTFILES/cursors/install.sh"
 fi

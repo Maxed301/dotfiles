@@ -1,3 +1,9 @@
 # machine-local state written into stowed dirs
 fish/.config/fish/fish_variables
 nvim/.config/nvim/plugin/
+
+# macOS Finder metadata
+.DS_Store
+
+# Karabiner writes its own backups into the config dir
+karabiner/.config/karabiner/automatic_backups/

@@ -1,0 +1,7 @@
+command = /opt/homebrew/bin/fish --login --interactive
+
+# Option acts as Alt, so the Alt+1..5 / Alt+6..9 / Alt+,./ bindings work
+macos-option-as-alt = true
+
+# Tab bar lives in the titlebar, and window-decoration = none hides it
+macos-titlebar-style = tabs

@@ -1,0 +1,4 @@
+# Ubuntu / Hyprland: no macOS titlebar, so Hyprland + hyprbars draw it instead
+window-decoration = none
+gtk-single-instance = true
+command = /usr/bin/fish --login --interactive

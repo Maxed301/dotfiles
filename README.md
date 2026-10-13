@@ -20,6 +20,8 @@ Ubuntu 24.04 + self-built Hyprland. Berserk palette (black / `#8b0000` red).
 
 ## Install
 
+Ubuntu:
+
 ```sh
 sudo apt install stow fish tmux zoxide fzf ripgrep playerctl brightnessctl \
   cliphist wl-clipboard thunar
@@ -27,11 +29,28 @@ git clone <this repo> ~/dotfiles
 ~/dotfiles/install.sh        # -n for a dry run, or name packages: install.sh nvim tmux
 ```
 
-`install.sh` stows every package into `$HOME`. Files that are in the way get
-moved to `~/.dotfiles-backup/<timestamp>/`. Running it again is safe.
+macOS (Apple silicon, Homebrew under `/opt/homebrew`):
 
-Neovim comes from the snap (`sudo snap install nvim --classic`). Plugins install
-on first start; Mason installs the LSP servers and formatters.
+```sh
+brew install stow fish tmux zoxide fzf ripgrep starship neovim
+brew install --cask ghostty karabiner-elements font-jetbrains-mono-nerd-font
+git clone <this repo> ~/dotfiles
+~/dotfiles/install.sh -n     # dry run first; the default set is picked per OS
+~/dotfiles/install.sh
+```
+
+`install.sh` stows the default packages for the current OS into `$HOME`. Files
+that are in the way get moved to `~/.dotfiles-backup/<timestamp>/`. Running it
+again is safe. On macOS `fish` is left out by default; see the header of
+`install.sh`.
+
+Ghostty reads `ghostty/` everywhere, `ghostty-linux/` on Ubuntu, and
+`ghostty-macos/` on macOS, where it lives under `~/Library/Application Support`.
+
+Neovim comes from the snap on Ubuntu (`sudo snap install nvim --classic`) and
+from Homebrew on macOS. Plugins install on first start; Mason installs the LSP
+servers and formatters. The `tree-sitter` CLI is a separate Homebrew formula
+(`tree-sitter-cli`), and nvim-treesitter needs it to compile parsers.
 
 ## Desktop stack
 

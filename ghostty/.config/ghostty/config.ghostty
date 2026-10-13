@@ -1,14 +1,14 @@
 font-family = JetBrainsMono Nerd Font
-font-size = 15
+font-size = 18
 
 # Kanagawa Dragon: muted, earthy palette with neutral text, so red only
 # shows up where it means something (errors, git deletions).
 theme = Kanagawa Dragon
 # Berserk accents
 cursor-color = #b31b1b
+foreground = #ffffff
 selection-background = #4A0000
 selection-foreground = #e6e6e6
-background-opacity = 0.95
 
 # Dragon's ANSI colours are very desaturated; same hues, ~2-3x saturation
 palette = 1=#f15c50
@@ -24,11 +24,14 @@ palette = 12=#66c9f3
 palette = 13=#927cc6
 palette = 14=#66cbb8
 
-command = /usr/bin/fish --login --interactive
 shell-integration = fish
-
-# Hyprland + hyprbars already draw a titlebar - no GTK header bar on top of it
-window-decoration = none
-gtk-single-instance = true
 confirm-close-surface = false
 copy-on-select = clipboard
+
+# shift+Enter sends a literal newline (ESC CR), for multi-line input
+keybind = shift+enter=text:\x1b\r
+
+# Linux-only settings live in the ghostty-linux package. On macOS the file is
+# absent and the `?` makes the include a no-op. macOS settings live in the
+# ghostty-macos package, which Ghostty loads from its own config path.
+config-file = ?../ghostty-linux/linux.ghostty

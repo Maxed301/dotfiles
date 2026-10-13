@@ -1,0 +1,37 @@
+{
+    "global": {
+        "show_in_menu_bar": true
+    },
+    "profiles": [
+        {
+            "name": "Default",
+            "selected": true,
+            "simple_modifications": [],
+            "fn_function_keys": [],
+            "devices": [],
+            "complex_modifications": {
+                "rules": [
+                    {
+                        "description": "Caps Lock: tap = Escape, hold = Hyper (Cmd+Ctrl+Opt+Shift) for Raycast hotkeys",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": {
+                                    "key_code": "caps_lock",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_shift",
+                                        "modifiers": ["left_command", "left_control", "left_option"]
+                                    }
+                                ],
+                                "to_if_alone": [{ "key_code": "escape" }]
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}
